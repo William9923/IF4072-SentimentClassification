@@ -11,11 +11,11 @@ class ILoader(ABC):
         pass
 
     @abstractmethod
-    def get_test_data(self):
+    def get_val_data(self):
         pass
 
     @abstractmethod
-    def shuffle(self):
+    def get_test_data(self):
         pass
 
     @abstractmethod

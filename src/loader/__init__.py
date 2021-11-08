@@ -1,4 +1,2 @@
-from src.loader.interface import *
-
-class Dependencies:
-    pass
+from src.loader.interface import ILoader
+from src.loader.impl import DataLoader
