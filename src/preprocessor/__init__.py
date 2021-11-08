@@ -1,4 +1,2 @@
 from src.preprocessor.interface import *
-
-class Dependencies:
-    pass
+from src.preprocessor.impl import *
