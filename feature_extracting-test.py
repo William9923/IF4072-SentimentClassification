@@ -2,7 +2,7 @@ import os
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 pd.options.mode.chained_assignment = None
-from src.loader import DataLoader
+from src.loader import DataLoader, ILoader
 from src.preprocessor import TextPreprocessor, IPreprocessor
 from src.feature_extractor import CountFeatureExtractor, TFIDFFeatureExtractor, FastTextFeatureExtractor, BERTFeatureExtractor, IBoWFeatureExtractor, IW2VFeatureExtractor
 
@@ -19,7 +19,7 @@ if __name__ == "__main__":
     target = "sentiment"
     train_target_path = os.path.join("./data", "train.csv")
     test_target_path = os.path.join("./data", "test.csv")
-    loader = DataLoader(target=target, sample_size=100, sampling=True, train_file_path=train_target_path, test_file_path=test_target_path)
+    loader:ILoader = DataLoader(target=target, sample_size=100, sampling=True, train_file_path=train_target_path, test_file_path=test_target_path)
     loader.load()
 
     X_train, y_train = loader.get_train_data()
@@ -34,7 +34,7 @@ if __name__ == "__main__":
         REMOVE_PUNCT_COMPONENT,
         EMOJI_MASK,
     ]
-    preprocessor = TextPreprocessor(component=component)
+    preprocessor:IPreprocessor = TextPreprocessor(component=component)
     X_train['cleaned_review'] = preprocessor.preprocess(X_train['review'])
     X_val['cleaned_review'] = preprocessor.preprocess(X_val['review'])
     # vectorizer = FastTextFeatureExtractor(embedding_dimension=100, num_words=1000, min_count=1, window=5, sg=1)

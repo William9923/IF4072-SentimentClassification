@@ -1,6 +1,7 @@
 from gensim.models import FastText
 from tensorflow.keras.preprocessing.text import Tokenizer
 import transformers
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 from src.feature_extractor.interface import IW2VFeatureExtractor
 from src.utility.embedding import create_embedding_matrix
@@ -21,6 +22,11 @@ class FastTextFeatureExtractor(IW2VFeatureExtractor):
         self.embedding_matrix = create_embedding_matrix(self.tokenizer.word_index, self.num_words, self.embedding.wv, self.embedding_dimension)
         self.fitted = True
 
+    def tokenize(self, X):
+        x = self.tokenizer.texts_to_sequences(X)
+        x = pad_sequences(x, maxlen=self.max_length, padding="pre", truncating="post")
+        return x
+
     def get_embedding_matrix(self):
         return self.embedding_matrix
 
@@ -34,10 +40,15 @@ class FastTextFeatureExtractor(IW2VFeatureExtractor):
 class BERTFeatureExtractor(IW2VFeatureExtractor):
     def __init__(self, pre_trained_name):
         self.embedding = transformers.TFDistilBertModel.from_pretrained(pre_trained_name)
+        self.tokenizer = transformers.AutoTokenizer.from_pretrained(pre_trained_name)
         self.embedding_matrix = self.embedding.weights[0].numpy()
 
     def train(self, X):
-        print("Pre-trained model don't need to be trained...")
+        pass
+
+    def tokenize(self, X):
+        x = self.tokenizer(list(X), padding='max_length', truncation=True, return_tensors="tf")
+        return x['input_ids']
 
     def get_embedding_matrix(self):
         return self.embedding_matrix

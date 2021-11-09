@@ -28,6 +28,10 @@ class IW2VFeatureExtractor(ABC):
     def train(self):
         pass 
 
+    @abstractmethod 
+    def tokenize(self, X):
+        pass
+
     @abstractmethod
     def get_embedding_matrix(self):
         pass
