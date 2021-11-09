@@ -51,7 +51,7 @@ class DataLoader(ILoader):
             self.load()
         
         if self.sampling:
-            return (self.train[0][:self.sample_size * self.val_size], self.train[1][:self.sample_size * self.val_size])
+            return (self.val[0][:self.sample_size], self.val[1][:self.sample_size])
         return self.val
 
     def get_test_data(self):
