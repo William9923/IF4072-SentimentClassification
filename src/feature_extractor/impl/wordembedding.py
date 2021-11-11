@@ -13,7 +13,7 @@ class FastTextFeatureExtractor(IW2VFeatureExtractor):
         self.num_words = num_words
         self.embedding_dimension = embedding_dimension
         self.min_count = min_count
-        self.tokenizer = Tokenizer()
+        self.tokenizer = Tokenizer(num_words=num_words)
         self.fitted = False
 
     def train(self, X):
@@ -24,7 +24,7 @@ class FastTextFeatureExtractor(IW2VFeatureExtractor):
 
     def tokenize(self, X):
         x = self.tokenizer.texts_to_sequences(X)
-        x = pad_sequences(x, maxlen=self.max_length, padding="pre", truncating="post")
+        x = pad_sequences(x, maxlen=self.num_words, padding="pre", truncating="post")
         return x
 
     def get_embedding_matrix(self):
@@ -38,10 +38,12 @@ class FastTextFeatureExtractor(IW2VFeatureExtractor):
         self.fitted = True
 
 class BERTFeatureExtractor(IW2VFeatureExtractor):
-    def __init__(self, pre_trained_name):
+    def __init__(self, num_words, pre_trained_name):
         self.embedding = transformers.TFDistilBertModel.from_pretrained(pre_trained_name)
         self.tokenizer = transformers.AutoTokenizer.from_pretrained(pre_trained_name)
         self.embedding_matrix = self.embedding.weights[0].numpy()
+
+        self.num_words = num_words
 
     def train(self, X):
         pass

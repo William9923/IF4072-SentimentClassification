@@ -64,7 +64,8 @@ class DataLoader(ILoader):
 
     def reverse_labels(self, batch):
         assert self.encoder is not None
-        return self.encoder.inverse_transform(batch)
+        func = lambda x: int(x)
+        return self.encoder.inverse_transform([func(x) for x in batch])
 
 
     

@@ -1,1 +1,1 @@
-from src.classifier.interface import *
+from src.classifier.baseline import *
