@@ -16,7 +16,7 @@ from src.utility.constant import (
 from src.preprocessor.interface import IPreprocessor
 
 class TextPreprocessor(IPreprocessor):
-    def __init__(self, component=[]):
+    def __init__(self, component):
         self.component = component
 
     def preprocess(self, batch):

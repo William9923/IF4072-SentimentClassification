@@ -5,7 +5,7 @@ from sklearn.preprocessing import LabelEncoder
 from src.loader.interface import ILoader
 
 class DataLoader(ILoader):
-    def __init__(self, target="", sample_size=100, sampling=False, train_file_path="", test_file_path="", val_split=0.2, seed=123):
+    def __init__(self, target, sample_size, sampling, train_file_path, test_file_path, val_split):
         
         assert val_split <= 1
         

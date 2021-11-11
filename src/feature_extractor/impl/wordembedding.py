@@ -38,11 +38,10 @@ class FastTextFeatureExtractor(IW2VFeatureExtractor):
         self.fitted = True
 
 class BERTFeatureExtractor(IW2VFeatureExtractor):
-    def __init__(self, num_words, pre_trained_name):
+    def __init__(self, pre_trained_name):
         self.embedding = TFDistilBertModel.from_pretrained(pre_trained_name)
         self.tokenizer = AutoTokenizer.from_pretrained(pre_trained_name)
         self.embedding_matrix = self.embedding.weights[0].numpy()
-        self.num_words = num_words
 
     def train(self, _):
         print("Pre-trained model do not need to be trained!")

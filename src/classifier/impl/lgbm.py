@@ -3,18 +3,21 @@ from lightgbm import LGBMClassifier
 
 from src.classifier.interface import IClassifier
 
+
 class LGBMClf(IClassifier):
-    def __init__(self, n_estimators, learning_rate, max_depth):
-        self.model = LGBMClassifier(n_estimators=n_estimators, learning_rate=learning_rate, max_depth=max_depth)
+    def __init__(self, n_estimators, learning_rate, max_depth, early_stopping_rounds):
+        self.model = LGBMClassifier(
+            n_estimators=n_estimators, learning_rate=learning_rate, max_depth=max_depth
+        )
         self.fitted = False
+        self.early_stopping_rounds=early_stopping_rounds
 
-
-    def train(self, X, y, X_test, y_test, early_stopping_rounds=10):
+    def train(self, X, y, X_test, y_test):
         self.model.fit(
             X=X,
             y=y,
-            eval_set = [(X_test, y_test)],
-            early_stopping_rounds=early_stopping_rounds,
+            eval_set=[(X_test, y_test)],
+            early_stopping_rounds=self.early_stopping_rounds,
         )
         self.fitted = True
 
@@ -23,7 +26,7 @@ class LGBMClf(IClassifier):
         return self.model.predict_proba(batch)
 
     def predict(self, batch):
-        assert self.fitted 
+        assert self.fitted
         return self.model.predict(batch)
 
     def save(self, filename):

@@ -12,15 +12,17 @@ from transformers import TFDistilBertModel
 
 from src.classifier.interface import IClassifier
 
+
 class FineTuneBertClf(IClassifier):
     def __init__(
         self,
         batch_size,
         length,
-        model_name="distilbert-base-uncased",
-        loss=BinaryCrossentropy(),
-        optimizer=Adam(learning_rate=3e-5),
-        metrics=["accuracy"],
+        epochs,
+        model_name,
+        loss,
+        optimizer,
+        metrics,
     ):
 
         self.batch_size = batch_size
@@ -45,14 +47,15 @@ class FineTuneBertClf(IClassifier):
 
         self.fitted = False
         self.model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
+        self.epochs = epochs
 
-    def train(self, X, y, X_test, y_test, epochs=10):
+    def train(self, X, y, X_test, y_test):
         self.model.fit(
             x=X,
             y=y,
             batch_size=self.batch_size,
             validation_data=(X_test, y_test),
-            epochs=epochs,
+            epochs=self.epochs,
         )
         self.fitted = True
 

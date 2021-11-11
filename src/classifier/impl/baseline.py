@@ -7,18 +7,21 @@ from tensorflow.keras.losses import BinaryCrossentropy
 
 from src.classifier.interface import IClassifier
 
+
 class LSTMClf(IClassifier):
     def __init__(
         self,
         batch_size,
         length,
-        embedding_matrix=None,
-        loss=BinaryCrossentropy(),
-        optimizer=Adam(learning_rate=3e-5),
-        metrics=["accuracy"],
+        epochs,
+        embedding_matrix,
+        loss,
+        optimizer,
+        metrics,
     ):
 
         self.batch_size = batch_size
+        self.length = length
         self.input = Input(shape=(length,), name="input_ids", dtype="int32")
         if embedding_matrix is None:
             self.embedding = Embedding(
@@ -37,15 +40,32 @@ class LSTMClf(IClassifier):
         self.model = Model(inputs=self.input, outputs=self.output)
 
         self.fitted = False
+
+        self.loss = loss
+        self.optimizer = optimizer
+        self.metrics = metrics
         self.model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
 
-    def train(self, X, y, X_test, y_test, epochs=10):
+        self.epochs = epochs
+
+    def set_embedding_matrix(self, embedding_matrix):
+        self.embedding = Embedding(
+            np.shape(embedding_matrix)[0],
+            output_dim=np.shape(embedding_matrix)[1],
+            input_length=self.length,
+            trainable=False,
+        )(self.input)
+        self.model.compile(
+            loss=self.loss, optimizer=self.optimizer, metrics=self.metrics
+        )
+
+    def train(self, X, y, X_test, y_test):
         self.model.fit(
             x=X,
             y=y,
             batch_size=self.batch_size,
             validation_data=(X_test, y_test),
-            epochs=epochs,
+            epochs=self.epochs,
         )
         self.fitted = True
 
