@@ -1,7 +1,7 @@
 from gensim.models import FastText
 from tensorflow.keras.preprocessing.text import Tokenizer
-import transformers
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+from transformers import TFDistilBertModel, AutoTokenizer
 
 from src.feature_extractor.interface import IW2VFeatureExtractor
 from src.utility.embedding import create_embedding_matrix
@@ -39,25 +39,29 @@ class FastTextFeatureExtractor(IW2VFeatureExtractor):
 
 class BERTFeatureExtractor(IW2VFeatureExtractor):
     def __init__(self, num_words, pre_trained_name):
-        self.embedding = transformers.TFDistilBertModel.from_pretrained(pre_trained_name)
-        self.tokenizer = transformers.AutoTokenizer.from_pretrained(pre_trained_name)
+        self.embedding = TFDistilBertModel.from_pretrained(pre_trained_name)
+        self.tokenizer = AutoTokenizer.from_pretrained(pre_trained_name)
         self.embedding_matrix = self.embedding.weights[0].numpy()
-
         self.num_words = num_words
 
-    def train(self, X):
-        pass
+    def train(self, _):
+        print("Pre-trained model do not need to be trained!")
 
-    def tokenize(self, X):
+    def tokenize(self, X, all=False):
         x = self.tokenizer(list(X), padding='max_length', truncation=True, return_tensors="tf")
+        if all:
+            return {
+                'input_ids': x['input_ids'],
+                'attention_mask': x['attention_mask'],
+            }
         return x['input_ids']
 
     def get_embedding_matrix(self):
         return self.embedding_matrix
 
-    def save(self, filename):
-        pass
+    def save(self, _):
+        print("Pre-trained model do not need to be saved!")
 
-    def load(self, filename):
-        pass
+    def load(self, _):
+        print("Pre-trained model do not need to be loaded!")
 

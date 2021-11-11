@@ -2,12 +2,11 @@ import os
 import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score
-from sklearn.feature_extraction.text import TfidfVectorizer
 pd.options.mode.chained_assignment = None
 from src.loader import DataLoader, ILoader
 from src.preprocessor import TextPreprocessor, IPreprocessor
-from src.feature_extractor import CountFeatureExtractor, TFIDFFeatureExtractor, FastTextFeatureExtractor, BERTFeatureExtractor, IBoWFeatureExtractor, IW2VFeatureExtractor
-from src.classifier import LSTMClf, FineTuneBertClf
+from src.feature_extractor import TFIDFFeatureExtractor, IBoWFeatureExtractor, IW2VFeatureExtractor
+from src.classifier import LGBMClf, IClassifier
 from src.utility.constant import (
     LOWERCASE_COMPONENT,
     MASK_EMOJI_COMPONENT, 
@@ -21,7 +20,7 @@ if __name__ == "__main__":
     target = "sentiment"
     train_target_path = os.path.join("./data", "train.csv")
     test_target_path = os.path.join("./data", "test.csv")
-    loader:ILoader = DataLoader(target=target, sample_size=100, sampling=True, train_file_path=train_target_path, test_file_path=test_target_path)
+    loader:ILoader = DataLoader(target=target, sample_size=100, sampling=False, train_file_path=train_target_path, test_file_path=test_target_path)
     loader.load()
 
     X_train, y_train = loader.get_train_data()
@@ -41,25 +40,26 @@ if __name__ == "__main__":
     X_train['cleaned_review'] = preprocessor.preprocess(X_train['review'])
     X_val['cleaned_review'] = preprocessor.preprocess(X_val['review'])
     X_test['cleaned_review'] = preprocessor.preprocess(X_test['review'])
-    # vectorizer = FastTextFeatureExtractor(embedding_dimension=100, num_words=100, min_count=1, window=5, sg=1)
-    vectorizer = BERTFeatureExtractor(1000, "distilbert-base-uncased")
+
+    length = 1000
+    vectorizer:IBoWFeatureExtractor = TFIDFFeatureExtractor(max_features=length, ngram_range=(1,1))
+    
     if isinstance(vectorizer, IBoWFeatureExtractor):
         print("BoW")
+        train_tokenized = vectorizer.fit_transform(X_train['cleaned_review'])
+        val_tokenized = vectorizer.transform(X_val['cleaned_review'])
+        test_tokenized = vectorizer.transform(X_test['cleaned_review'])
+
     if isinstance(vectorizer, IW2VFeatureExtractor):
         print("W2V")
         vectorizer.train(X_train['cleaned_review'].values)
+        train_tokenized = vectorizer.tokenize(X_train['cleaned_review'], True)
+        val_tokenized = vectorizer.tokenize(X_val['cleaned_review'], True)
+        test_tokenized = vectorizer.tokenize(X_test['cleaned_review'], True)
 
-    train_tokenized = vectorizer.tokenize(X_train['cleaned_review'], True)
-    val_tokenized = vectorizer.tokenize(X_val['cleaned_review'], True)
-    test_tokenized = vectorizer.tokenize(X_test['cleaned_review'], True)
-    
-    # save_path = os.path.join("bin", "bert-vectorizer.pkl")
-    # clf = LSTMClf(32, 100, embedding_matrix=vectorizer.get_embedding_matrix())
-    clf = FineTuneBertClf(32, 512)
-    clf.train(X=train_tokenized, y=y_train, X_test=val_tokenized, y_test=y_val, epochs=10)
+    clf:IClassifier = LGBMClf(n_estimators=1000,learning_rate=0.1,max_depth=20)
+    clf.train(X=train_tokenized, y=y_train, X_test=val_tokenized, y_test=y_val, early_stopping_rounds=10)
     pred = clf.predict(test_tokenized)
     print(f"Accuracy Score : {accuracy_score(y_test, pred)}")
     print(pred[:10].reshape(-1))
     print(loader.reverse_labels(pred[:10].reshape(-1)))
-
-

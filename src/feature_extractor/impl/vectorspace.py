@@ -1,5 +1,6 @@
 import joblib
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+
 from src.feature_extractor.interface import IBoWFeatureExtractor
 
 class BoWFeatureExtractor(IBoWFeatureExtractor):
