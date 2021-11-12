@@ -1,2 +1,2 @@
-from src.preprocessor.interface import *
-from src.preprocessor.impl import *
+from src.preprocessor.interface import IPreprocessor
+from src.preprocessor.impl import TextPreprocessor

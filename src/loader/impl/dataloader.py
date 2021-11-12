@@ -5,7 +5,7 @@ from sklearn.preprocessing import LabelEncoder
 from src.loader.interface import ILoader
 
 class DataLoader(ILoader):
-    def __init__(self, target="", sample_size=100, sampling=False, train_file_path="", test_file_path="", val_split=0.2, seed=123):
+    def __init__(self, target, sample_size, sampling, train_file_path, test_file_path, val_split):
         
         assert val_split <= 1
         
@@ -51,7 +51,7 @@ class DataLoader(ILoader):
             self.load()
         
         if self.sampling:
-            return (self.train[0][:self.sample_size * self.val_size], self.train[1][:self.sample_size * self.val_size])
+            return (self.val[0][:self.sample_size], self.val[1][:self.sample_size])
         return self.val
 
     def get_test_data(self):
@@ -64,7 +64,8 @@ class DataLoader(ILoader):
 
     def reverse_labels(self, batch):
         assert self.encoder is not None
-        return self.encoder.inverse_transform(batch)
+        func = lambda x: int(x)
+        return self.encoder.inverse_transform([func(x) for x in batch])
 
 
     
