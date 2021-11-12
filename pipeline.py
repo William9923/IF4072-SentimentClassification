@@ -1,3 +1,6 @@
+import pandas as pd 
+pd.options.mode.chained_assignment = None
+
 from src.classifier.interface import IClassifier
 from src.loader.interface import ILoader
 from src.feature_extractor.interface import IBoWFeatureExtractor, IW2VFeatureExtractor
@@ -31,8 +34,6 @@ from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_sc
 
 class SentimentAnalyzer:
     def __init__(self, config: Config, option: Option):
-        print("--Config--")
-        print(config)
         self.config = config
         self.option = option
         self.loader: ILoader = None

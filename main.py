@@ -5,6 +5,11 @@
 
 import argparse
 import os
+import logging
+import tensorflow as tf
+tf.get_logger().setLevel(logging.ERROR)
+import pandas as pd 
+pd.options.mode.chained_assignment = None
 
 from src.utility.constant import (
     LSTM_CLF_OPTION,
@@ -28,7 +33,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     # --- [Option Settings] ---
-    parser.add_argument("--name", type=str, required=True, help=f"To describe the current experiment!")
+    parser.add_argument(
+        "--name", type=str, required=True, help=f"To describe the current experiment!"
+    )
     parser.add_argument(
         "--fe",
         default=TFIDF_FE_OPTION,
@@ -44,18 +51,20 @@ if __name__ == "__main__":
 
     # --- [Config Settings] ---
     # Loader Settings
-    parser.add_argument("--sampling", default=False, type=bool)
+    parser.add_argument("--sampling", dest="sampling", action="store_true")
+    parser.add_argument("--no-sampling", dest="sampling", action="store_false")
+    parser.set_defaults(sampling=True)
+
     parser.add_argument("--sample_size", default=100, type=int)
     parser.add_argument("--target", default=TARGET, type=str)
 
-    parser.add_argument("--max_vocab_size", default=1000, type=int)
-    
     # Embedding Settings
-    parser.add_argument("--embedding_dimension", default=512, type=int)
-    parser.add_argument("--min_count", default=1, type=int)
-    parser.add_argument("--window", default=5, type=int)
-    parser.add_argument("--num_words", default=1000, type=int)
-    parser.add_argument("--sg", default=1, type=int)
+    # parser.add_argument("--max_vocab_size", default=1000, type=int)
+    # parser.add_argument("--embedding_dimension", default=512, type=int)
+    # parser.add_argument("--min_count", default=1, type=int)
+    # parser.add_argument("--window", default=5, type=int)
+    # parser.add_argument("--num_words", default=1000, type=int)
+    # parser.add_argument("--sg", default=1, type=int)
 
     # Training Settings
     parser.add_argument("--n_estimators", default=500, type=int)
@@ -84,16 +93,19 @@ if __name__ == "__main__":
 
     # --- [Setup config] ---
     config = Config(args.name)
+    if args.sampling:
+        raise Exception("WOI")
+
     config.sampling = args.sampling
     config.sample_size = args.sample_size
     config.target = args.target
 
-    config.max_vocab_size = args.max_vocab_size
-    config.embedding_dimension = args.embedding_dimension
-    config.min_count = args.min_count
-    config.window = args.window
-    config.num_words = args.num_words
-    config.sg = args.sg
+    # config.max_vocab_size = args.max_vocab_size
+    # config.embedding_dimension = args.embedding_dimension
+    # config.min_count = args.min_count
+    # config.window = args.window
+    # config.num_words = args.num_words
+    # config.sg = args.sg
 
     config.n_estimators = args.n_estimators
     config.early_stopping_round = args.early_stopping_round
@@ -114,7 +126,7 @@ if __name__ == "__main__":
     print(f"Running Experiment : {config.experiment_name}")
     result = sentiment_analyzer.run()
     print("Result")
-    print("Precision : " ,result.get("precision"))
+    print("Precision : ", result.get("precision"))
     print("Recall : ", result.get("recall"))
     print("F1 : ", result.get("f1"))
     print("Acc : ", result.get("accuracy"))

@@ -6,5 +6,6 @@ python main.py --name testing-lstm \
   --sampling False \
   --sample_size 100 \
   --target sentiment \
+  --learning_rate 3e-4 \
   --epochs 10 \
-  --batch_size 32 \
+  --batch_size 32

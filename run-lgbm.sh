@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 python main.py --name testing \
-  --fe count \
+  --fe tfidf \
   --clf lgbm \
-  --sampling False \
+  --no-sampling \
   --sample_size 100 \
   --target sentiment \
-  --max_vocab_size 1000 \
+  --learning_rate 0.1 \
   --n_estimators 500 \
   --early_stopping_round 15 \
-  --max_depth 24 
+  --max_depth 24
