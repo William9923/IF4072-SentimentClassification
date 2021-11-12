@@ -104,3 +104,6 @@ env.bak/
 venv.bak/
 
 ## Custom
+data/**
+bin/**
+logs/**
