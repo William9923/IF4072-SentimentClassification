@@ -10,6 +10,7 @@ def build_data_loader(config: Config) -> ILoader:
     if dataLoader is not None:
         return dataLoader
 
+    print(config.sampling)
     params = {
         "target": config.target,
         "sample_size": config.sample_size,

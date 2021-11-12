@@ -15,6 +15,7 @@ class LSTMClf(IClassifier):
         length,
         epochs,
         embedding_matrix,
+        embedding_matrix_shape,
         loss,
         optimizer,
         metrics,
@@ -22,10 +23,13 @@ class LSTMClf(IClassifier):
 
         self.batch_size = batch_size
         self.length = length
+        embedding_matrix_shape
+        print("==LSTM==")
+        print(self.length)
         self.input = Input(shape=(length,), name="input_ids", dtype="int32")
         if embedding_matrix is None:
             self.embedding = Embedding(
-                1000, output_dim=256, input_length=length, trainable=True
+                embedding_matrix_shape[0], output_dim=embedding_matrix_shape[1], input_length=length, trainable=True
             )(self.input)
         else:
             self.embedding = Embedding(
@@ -68,6 +72,9 @@ class LSTMClf(IClassifier):
             epochs=self.epochs,
         )
         self.fitted = True
+    
+    def summary(self):
+        return self.model.summary()
 
     def predict_proba(self, batch):
         assert self.fitted

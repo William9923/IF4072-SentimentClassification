@@ -15,6 +15,10 @@ class IClassifier(ABC):
         pass 
 
     @abstractmethod
+    def summary(self):
+        pass 
+
+    @abstractmethod
     def save(self):
         pass 
 

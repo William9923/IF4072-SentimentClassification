@@ -22,7 +22,7 @@ class FastTextFeatureExtractor(IW2VFeatureExtractor):
         self.embedding_matrix = create_embedding_matrix(self.tokenizer.word_index, self.num_words, self.embedding.wv, self.embedding_dimension)
         self.fitted = True
 
-    def tokenize(self, X):
+    def tokenize(self, X, _):
         x = self.tokenizer.texts_to_sequences(X)
         x = pad_sequences(x, maxlen=self.num_words, padding="pre", truncating="post")
         return x
@@ -46,9 +46,9 @@ class BERTFeatureExtractor(IW2VFeatureExtractor):
     def train(self, _):
         print("Pre-trained model do not need to be trained!")
 
-    def tokenize(self, X, all=False):
+    def tokenize(self, X, mask_attention=False):
         x = self.tokenizer(list(X), padding='max_length', truncation=True, return_tensors="tf")
-        if all:
+        if mask_attention:
             return {
                 'input_ids': x['input_ids'],
                 'attention_mask': x['attention_mask'],

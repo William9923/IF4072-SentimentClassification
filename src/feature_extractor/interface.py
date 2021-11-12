@@ -29,7 +29,7 @@ class IW2VFeatureExtractor(ABC):
         pass 
 
     @abstractmethod 
-    def tokenize(self, X):
+    def tokenize(self, X, mask_attention):
         pass
 
     @abstractmethod

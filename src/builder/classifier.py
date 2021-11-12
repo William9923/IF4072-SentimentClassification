@@ -1,5 +1,5 @@
-from tensorflow.python.keras.losses import BinaryCrossentropy
-from tensorflow.python.keras.optimizer_v2.adam import Adam
+from tensorflow.keras.losses import BinaryCrossentropy
+from tensorflow.keras.optimizers import Adam
 from src.utility.config import Config
 from src.classifier import IClassifier, FineTuneBertClf, LSTMClf, LGBMClf
 
@@ -9,19 +9,20 @@ lgbmClf: IClassifier = None
 bertClf: IClassifier = None
 
 
-def build_baseline(config: Config) -> IClassifier:
+def build_lstm(config: Config) -> IClassifier:
     global lstmClf
     if lstmClf is not None:
         return lstmClf
 
     params = {
         "batch_size": config.batch_size,
-        "length": config.embedding_dimension,
+        "length": config.max_vocab_size,
         "epochs": config.epochs,
         "embedding_matrix": config.embedding_matrix,
+        "embedding_matrix_shape": (config.max_vocab_size, config.embedding_dimension),
         "loss": BinaryCrossentropy(),
         "optimizer": Adam(learning_rate=config.learning_rate_dl),
-        "metric": config.metrics,
+        "metrics": config.metrics,
     }
     clf = LSTMClf(**params)
     lstmClf = clf
@@ -58,7 +59,7 @@ def build_bert(config: Config) -> IClassifier:
         "model_name": config.pretrained_model_name,
         "loss": BinaryCrossentropy(),
         "optimizer": Adam(learning_rate=config.learning_rate_dl),
-        "metric": config.metrics,
+        "metrics": config.metrics,
     }
     clf = FineTuneBertClf(**params)
     bertClf = clf

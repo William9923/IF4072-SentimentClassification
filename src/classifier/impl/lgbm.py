@@ -20,6 +20,10 @@ class LGBMClf(IClassifier):
             early_stopping_rounds=self.early_stopping_rounds,
         )
         self.fitted = True
+    
+    def summary(self):
+        summary = f"LGBM Configs :\n {str(self.model)}"
+        return summary
 
     def predict_proba(self, batch):
         assert self.fitted

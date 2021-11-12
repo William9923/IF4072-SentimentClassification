@@ -59,6 +59,9 @@ class FineTuneBertClf(IClassifier):
         )
         self.fitted = True
 
+    def summary(self):
+        return self.model.summary()
+
     def predict_proba(self, batch):
         assert self.fitted
         return self.model.predict(x=batch, batch_size=self.batch_size)
