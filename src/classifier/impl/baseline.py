@@ -24,8 +24,6 @@ class LSTMClf(IClassifier):
         self.batch_size = batch_size
         self.length = length
         embedding_matrix_shape
-        print("==LSTM==")
-        print(self.length)
         self.input = Input(shape=(length,), name="input_ids", dtype="int32")
         if embedding_matrix is None:
             self.embedding = Embedding(

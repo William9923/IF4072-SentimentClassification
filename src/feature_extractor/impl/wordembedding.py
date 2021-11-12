@@ -44,7 +44,7 @@ class BERTFeatureExtractor(IW2VFeatureExtractor):
         self.embedding_matrix = self.embedding.weights[0].numpy()
 
     def train(self, _):
-        print("Pre-trained model do not need to be trained!")
+        print("Pre-trained tokenizer don't need to be trained!")
 
     def tokenize(self, X, mask_attention=False):
         x = self.tokenizer(list(X), padding='max_length', truncation=True, return_tensors="tf")
@@ -59,8 +59,8 @@ class BERTFeatureExtractor(IW2VFeatureExtractor):
         return self.embedding_matrix
 
     def save(self, _):
-        print("Pre-trained model do not need to be saved!")
+        print("Pre-trained tokenizer don't need to be saved!")
 
     def load(self, _):
-        print("Pre-trained model do not need to be loaded!")
+        print("Pre-trained tokenizer don't need to be loaded!")
 

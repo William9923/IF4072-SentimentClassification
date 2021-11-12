@@ -93,9 +93,6 @@ if __name__ == "__main__":
 
     # --- [Setup config] ---
     config = Config(args.name)
-    if args.sampling:
-        raise Exception("WOI")
-
     config.sampling = args.sampling
     config.sample_size = args.sample_size
     config.target = args.target
