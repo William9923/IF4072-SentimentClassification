@@ -6,9 +6,8 @@ from tensorflow.keras.layers import (
     Dense,
     LSTM,
 )
+from tensorflow.keras.models import model_from_json
 from tensorflow.keras.models import Model
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.losses import BinaryCrossentropy
 from transformers import TFDistilBertModel
 
 from src.classifier.interface import IClassifier
@@ -43,7 +42,7 @@ class FineTuneBertClf(IClassifier):
         self.lstm = LSTM(128)(self.embedding)
         # self.fcn1 = Dense(length, activation="relu")(self.embedding[:, 0, :])
         self.fcn1 = Dense(64, activation="relu")(self.lstm)
-        self.fcn2 = Dropout(0.5)(self.fcn1)(self.fcn1)
+        self.fcn2 = Dropout(0.5)(self.fcn1)
         self.out = Dense(1, activation="sigmoid")(self.fcn2)
 
         self.model = Model(inputs=inputs, outputs=self.out)
@@ -73,10 +72,21 @@ class FineTuneBertClf(IClassifier):
         return np.round(self.predict_proba(batch))
 
     def save(self, filename):
+        formatted_filename_model = f"{filename}.hd5"
+        formatted_filename_weight = f"{filename}.h5"
+
         print(f"=== Saving Fine Tuned Bert Model : {filename} ===")
-        self.model.save_weights(filename)
+        self.model.save_weights(formatted_filename_weight)
+        json_rpr = self.model.to_json()
+        with open(formatted_filename_model, 'w') as f:
+            f.write(json_rpr)
 
     def load(self, filename):
+        formatted_filename_model = f"{filename}.hd5"
+        formatted_filename_weight = f"{filename}.h5"
+
         print("=== Loading Fine Tuned Bert Model : {filename} === ")
-        self.model.load_weights(filename)
+        with open(formatted_filename_model, 'r') as f:
+            self.model = model_from_json(f.read())
+        self.model.load_weights(formatted_filename_weight)
         self.fitted = True

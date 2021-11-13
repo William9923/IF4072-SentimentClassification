@@ -3,7 +3,7 @@
 python main.py --name testing-lstm \
   --fe fasttext \
   --clf lstm \
-  --no-sampling \
+  --sampling \
   --sample_size 100 \
   --target sentiment \
   --learning_rate 1.5e-5 \

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-python main.py --name testing-lgbm \
-  --fe tfidf \
-  --clf lgbm \
+python main.py --name testing-nb \
+  --fe count \
+  --clf nb \
   --sampling \
   --sample_size 100 \
   --target sentiment \

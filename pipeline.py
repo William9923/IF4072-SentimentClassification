@@ -1,6 +1,7 @@
 import os
 import json
 import pandas as pd
+from src.classifier.impl.baseline import LSTMClf
 
 pd.options.mode.chained_assignment = None
 
@@ -88,6 +89,11 @@ class SentimentAnalyzer:
         if isinstance(self.extractor, IW2VFeatureExtractor):
             self.extractor.train(X_train["cleaned_review"].values)
 
+            if isinstance(self.classifier, LSTMClf):
+                self.classifier.set_embedding_matrix(
+                    self.extractor.get_embedding_matrix()
+                )
+
             get_attention_mask = self.option.clf_option == BERT_CLF_OPTION
             train_tokenized = self.extractor.tokenize(
                 X_train["cleaned_review"], get_attention_mask
@@ -98,7 +104,6 @@ class SentimentAnalyzer:
             test_tokenized = self.extractor.tokenize(
                 X_test["cleaned_review"], get_attention_mask
             )
-
         self.classifier.train(
             X=train_tokenized, y=y_train, X_test=val_tokenized, y_test=y_val
         )
@@ -132,6 +137,35 @@ class SentimentAnalyzer:
             self.__parse_config(self.config),
         )
         log(filename_prefix, "EVALUATION", self.result)
+
+    def load(self):
+        assert self.compiled
+        filename_prefix = os.path.join("bin", self.config.experiment_name)
+        self.extractor.load(os.path.join(filename_prefix, "extractor"))
+        self.classifier.load(os.path.join(filename_prefix, "model"))
+        self.trained = True
+
+    def evaluate(self, batch, labels):
+        assert self.trained
+        prep_batch = self.preprocessor.preprocess(batch)
+
+        if isinstance(self.extractor, IBoWFeatureExtractor):
+            prep_tokenized = self.extractor.transform(prep_batch)
+
+        if isinstance(self.extractor, IW2VFeatureExtractor):
+            get_attention_mask = self.option.clf_option == BERT_CLF_OPTION
+            prep_tokenized = self.extractor.tokenize(prep_batch, get_attention_mask)
+
+        pred = self.classifier.predict(prep_tokenized)
+
+        result = {
+            "precision": precision_score(labels, pred),
+            "recall": recall_score(labels, pred),
+            "f1": f1_score(labels, pred),
+            "accuracy": accuracy_score(labels, pred),
+        }
+
+        return result, pred
 
     def __parse_config(self, obj):
         keys = [

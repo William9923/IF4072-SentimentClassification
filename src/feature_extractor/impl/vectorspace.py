@@ -22,10 +22,13 @@ class BoWFeatureExtractor(IBoWFeatureExtractor):
         return self.vectorizer.fit_transform(X).toarray()
 
     def save(self, filename):
-        joblib.dump(self.vectorizer, filename)
+        formatted_filename = f"{filename}.pkl"
+        joblib.dump(self.vectorizer, formatted_filename)
 
     def load(self, filename):
-        self.vectorizer = joblib.load(filename)
+        formatted_filename = f"{filename}.pkl"
+        self.vectorizer = joblib.load(formatted_filename)
+        self.fitted = True
 
 class CountFeatureExtractor(BoWFeatureExtractor):
     def __init__(self, max_features, ngram_range):

@@ -30,9 +30,9 @@ class NaiveBayesClf(IClassifier):
 
     def save(self, filename):
         print(f"=== Saving NB (Shallow ML) : {filename} ===")
-        joblib.dump(self.model, filename)
+        joblib.dump(self.model, f"{filename}.pkl")
 
     def load(self, filename):
         print("=== Loading NB (Shallow ML) : {filename} === ")
-        self.model = joblib.load(filename)
+        self.model = joblib.load(f"{filename}.pkl")
         self.fitted = True

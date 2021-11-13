@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-python main.py --name  \
+python main.py --name testing-bert \
   --fe bert \
   --clf bert \
-  --no-sampling \
+  --sampling \
   --sample_size 100 \
   --target sentiment \
   --model_name_or_path distilbert-base-uncased \

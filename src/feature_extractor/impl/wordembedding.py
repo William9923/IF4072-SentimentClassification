@@ -1,4 +1,5 @@
 from gensim.models import FastText
+from gensim.models.keyedvectors import KeyedVectors
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from transformers import TFDistilBertModel, AutoTokenizer
@@ -31,10 +32,13 @@ class FastTextFeatureExtractor(IW2VFeatureExtractor):
         return self.embedding_matrix
 
     def save(self, filename):
-        self.embedding.save(filename)
+        formatted_filename = f'{filename}.kv'
+        self.embedding.wv.save(formatted_filename)
 
     def load(self, filename):
-        self.embedding = FastText.load(filename)
+        self.embedding = FastText(vector_size=self.embedding_dimension, min_count=self.min_count, window=self.window, sg=self.sg)
+        formatted_filename = f'{filename}.kv'
+        self.embedding.wv = KeyedVectors.load(formatted_filename)
         self.fitted = True
 
 class BERTFeatureExtractor(IW2VFeatureExtractor):
