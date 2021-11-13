@@ -1,6 +1,7 @@
 import os
+import json
+import pandas as pd
 
-import pandas as pd 
 pd.options.mode.chained_assignment = None
 
 from src.classifier.interface import IClassifier
@@ -15,6 +16,7 @@ from src.utility.constant import (
     LGBM_CLF_OPTION,
     LSTM_CLF_OPTION,
     BERT_CLF_OPTION,
+    NB_CLF_OPTION,
 )
 
 from src.utility.config import Option, Config
@@ -23,6 +25,7 @@ from src.builder import (
     build_lstm,
     build_lgbm,
     build_bert,
+    build_nb,
     build_bert_fe,
     build_fasttext_fe,
     build_count_fe,
@@ -50,6 +53,7 @@ class SentimentAnalyzer:
         }
 
         self.clf_map = {
+            NB_CLF_OPTION: build_nb,
             LGBM_CLF_OPTION: build_lgbm,
             LSTM_CLF_OPTION: build_lstm,
             BERT_CLF_OPTION: build_bert,
@@ -101,26 +105,47 @@ class SentimentAnalyzer:
 
         self.trained = True
         pred = self.classifier.predict(test_tokenized)
-        return {
+        self.result = {
             "precision": precision_score(y_test, pred),
             "recall": recall_score(y_test, pred),
             "f1": f1_score(y_test, pred),
             "accuracy": accuracy_score(y_test, pred),
         }
+        return self.result
 
     def save(self):
-
-        filename_prefix = self.config.experiment_name
-
-        if isinstance(self.extractor, IBoWFeatureExtractor) or isinstance(self.extractor, IW2VFeatureExtractor): 
+        filename_prefix = os.path.join("bin", self.config.experiment_name)
+        if isinstance(self.extractor, IBoWFeatureExtractor) or isinstance(
+            self.extractor, IW2VFeatureExtractor
+        ):
             self.extractor.save(os.path.join(filename_prefix, "extractor"))
         self.classifier.save(os.path.join(filename_prefix, "model"))
-        
-        
 
-    def load(self):
-        pass
+        log(
+            filename_prefix,
+            str(self.option).upper(),
+            self.__parse_config(self.option),
+        )
+        log(
+            filename_prefix,
+            str(self.config).upper(),
+            self.__parse_config(self.config),
+        )
+        log(filename_prefix, "EVALUATION", self.result)
 
-    def run(self, batch):
-        assert self.compiled
-        assert self.trained
+    def __parse_config(self, obj):
+        keys = [
+            a
+            for a in dir(obj)
+            if not a.startswith("__") and not callable(getattr(obj, a))
+        ]
+        dicts = {}
+        for key in keys:
+            dicts[key] = getattr(obj, key)
+        return dicts
+
+
+def log(path, topic, dicts):
+    dicts["topic"] = topic
+    with open(os.path.join(path, topic + ".json"), "w", encoding="utf-8") as f:
+        json.dump(dicts, f, ensure_ascii=False, indent=4)

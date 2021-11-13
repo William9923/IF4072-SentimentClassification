@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-python main.py --name testing \
-  --fe tfidf \
-  --clf lgbm \
+python main.py --name exp-p0-1.1 \
+  --fe count \
+  --clf nb \
   --no-sampling \
   --sample_size 100 \
   --target sentiment \

@@ -1,4 +1,4 @@
-from src.builder.classifier import build_lstm, build_bert, build_lgbm
+from src.builder.classifier import build_lstm, build_bert, build_lgbm, build_nb
 from src.builder.feature_extractor import (
     build_bert_fe,
     build_fasttext_fe,

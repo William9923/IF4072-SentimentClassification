@@ -1,10 +1,11 @@
 from tensorflow.keras.losses import BinaryCrossentropy
 from tensorflow.keras.optimizers import Adam
 from src.utility.config import Config
-from src.classifier import IClassifier, FineTuneBertClf, LSTMClf, LGBMClf
+from src.classifier import IClassifier, FineTuneBertClf, LSTMClf, LGBMClf, NaiveBayesClf
 
 # --- [Global Variable] ---
 lstmClf: IClassifier = None
+nbClf: IClassifier = None
 lgbmClf: IClassifier = None
 bertClf: IClassifier = None
 
@@ -26,6 +27,17 @@ def build_lstm(config: Config) -> IClassifier:
     }
     clf = LSTMClf(**params)
     lstmClf = clf
+
+    return clf
+
+def build_nb(config: Config) -> IClassifier:
+    global nbClf
+    if nbClf is not None:
+        return nbClf
+
+    params = {}
+    clf = NaiveBayesClf(**params)
+    nbClf = clf
 
     return clf
 

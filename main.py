@@ -127,3 +127,5 @@ if __name__ == "__main__":
     print("Recall : ", result.get("recall"))
     print("F1 : ", result.get("f1"))
     print("Acc : ", result.get("accuracy"))
+
+    sentiment_analyzer.save()

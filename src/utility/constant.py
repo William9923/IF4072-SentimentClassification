@@ -1,5 +1,7 @@
 # --- [Constant running process] ---
 SEED = 123
+CONFIG_CLS = "config"
+OPTION_CLS = "option"
 
 # --- [Preprocessor Component] ---
 LOWERCASE_COMPONENT = "lower"
@@ -22,6 +24,7 @@ TFIDF_FE_OPTION = "tfidf"
 FASTTEXT_FE_OPTION = "fasttext"
 BERT_FE_OPTION = "bert"
 
+NB_CLF_OPTION = "nb"
 LGBM_CLF_OPTION = "lgbm"
 LSTM_CLF_OPTION = "lstm"
 BERT_CLF_OPTION = "bert"

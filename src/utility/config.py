@@ -17,6 +17,9 @@ from src.utility.constant import (
     LGBM_CLF_OPTION,
     LSTM_CLF_OPTION,
     BERT_CLF_OPTION,
+    NB_CLF_OPTION,
+    CONFIG_CLS,
+    OPTION_CLS,
 )
 
 
@@ -76,11 +79,17 @@ class Config(object):
         self.metrics = ["accuracy"]
         # ----- [End Param] -----
 
+    def __str__(self):
+        return CONFIG_CLS
+
 
 class Option:
     def __init__(self, fe_option, clf_option):
         self.fe_option = fe_option
         self.clf_option = clf_option
+
+    def __str__(self):
+        return OPTION_CLS
 
     def validate(self):
 
@@ -92,15 +101,20 @@ class Option:
         ]:
             raise Exception("Feature Extractor Option not exist!")
 
-        if self.clf_option not in [LGBM_CLF_OPTION, LSTM_CLF_OPTION, BERT_CLF_OPTION]:
+        if self.clf_option not in [
+            NB_CLF_OPTION,
+            LGBM_CLF_OPTION,
+            LSTM_CLF_OPTION,
+            BERT_CLF_OPTION,
+        ]:
             raise Exception("Classifier Option not exist!")
 
         supported = False
         # --- [Shallow ML Validation] ---
-        if (
-            self.fe_option in [COUNT_FE_OPTION, TFIDF_FE_OPTION]
-            and self.clf_option == LGBM_CLF_OPTION
-        ):
+        if self.fe_option in [COUNT_FE_OPTION, TFIDF_FE_OPTION] and self.clf_option in [
+            LGBM_CLF_OPTION,
+            NB_CLF_OPTION,
+        ]:
             supported = True
 
         if (
