@@ -121,7 +121,7 @@ if __name__ == "__main__":
     sentiment_analyzer.build()
 
     print(f"Running Experiment : {config.experiment_name}")
-    result = sentiment_analyzer.run()
+    result = sentiment_analyzer.train()
     print("Result")
     print("Precision : ", result.get("precision"))
     print("Recall : ", result.get("recall"))

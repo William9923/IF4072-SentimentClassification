@@ -7,6 +7,6 @@ python main.py --name testing-bert \
   --sample_size 100 \
   --target sentiment \
   --model_name_or_path distilbert-base-uncased \
-  --learning_rate 3e-4 \
+  --learning_rate 1.5e-5 \
   --epochs 2 \
   --batch_size 12

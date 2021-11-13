@@ -2,8 +2,6 @@ import numpy as np
 
 from tensorflow.keras.layers import Input, Dropout, Dense, LSTM, Embedding
 from tensorflow.keras.models import Model
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.losses import BinaryCrossentropy
 
 from src.classifier.interface import IClassifier
 

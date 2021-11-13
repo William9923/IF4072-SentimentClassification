@@ -1,8 +1,5 @@
 import re
 import string
-from tqdm import tqdm 
-
-tqdm.pandas()
 
 from src.utility.constant import (
     LOWERCASE_COMPONENT,
@@ -20,25 +17,26 @@ class TextPreprocessor(IPreprocessor):
         self.component = component
 
     def preprocess(self, batch):
+
         if MASK_URL_COMPONENT in self.component:
-            batch = batch.progress_apply(lambda row: self.__mask_url(row))
+            batch = batch.apply(lambda row: self.__mask_url(row))
 
         if REMOVE_HTML_TAG_COMPONENT in self.component:
-            batch = batch.progress_apply(lambda row: self.__remove_html_tag(row))
+            batch = batch.apply(lambda row: self.__remove_html_tag(row))
 
         if MASK_EMOJI_COMPONENT in self.component:
-            batch = batch.progress_apply(lambda row: self.__mask_emoji(row))
+            batch = batch.apply(lambda row: self.__mask_emoji(row))
 
         if NORMALIZATION_COMPONENT in self.component:
-            batch = batch.progress_apply(lambda row: self.__normalization(row))
+            batch = batch.apply(lambda row: self.__normalization(row))
 
         if REMOVE_PUNCT_COMPONENT in self.component:
-            batch = batch.progress_apply(lambda row: self.__remove_punctuation(row))
+            batch = batch.apply(lambda row: self.__remove_punctuation(row))
 
         if LOWERCASE_COMPONENT in self.component:
-            batch = batch.progress_apply(lambda row: self.__lower(row))
+            batch = batch.apply(lambda row: self.__lower(row))
         
-        batch = batch.progress_apply(lambda row: self.__remove_excess_whitespace(row))
+        batch = batch.apply(lambda row: self.__remove_excess_whitespace(row))
         return batch
 
     def available_component(self):

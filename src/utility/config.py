@@ -67,7 +67,7 @@ class Config(object):
         # ----- [End Param] -----
 
         # ----- [Initializing Deep ML Clf] -----
-        self.learning_rate_dl = 3e-4
+        self.learning_rate_dl = 1.5e-5
         self.pretrained_model_name = PRETRAINED_BERT_MODEL_NAME
 
         self.batch_size = 32

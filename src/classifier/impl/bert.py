@@ -4,6 +4,7 @@ from tensorflow.keras.layers import (
     Input,
     Dropout,
     Dense,
+    LSTM,
 )
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
@@ -39,8 +40,10 @@ class FineTuneBertClf(IClassifier):
         }
 
         self.embedding = self.bert(inputs)[0]
-        self.fcn1 = Dense(length, activation="relu")(self.embedding[:, 0, :])
-        self.fcn2 = Dropout(0.5)(self.fcn1)
+        self.lstm = LSTM(128)(self.embedding)
+        # self.fcn1 = Dense(length, activation="relu")(self.embedding[:, 0, :])
+        self.fcn1 = Dense(64, activation="relu")(self.lstm)
+        self.fcn2 = Dropout(0.5)(self.fcn1)(self.fcn1)
         self.out = Dense(1, activation="sigmoid")(self.fcn2)
 
         self.model = Model(inputs=inputs, outputs=self.out)

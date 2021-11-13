@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd 
 pd.options.mode.chained_assignment = None
 
@@ -62,7 +64,7 @@ class SentimentAnalyzer:
         self.classifier = self.clf_map[self.option.clf_option](self.config)
         self.compiled = True
 
-    def run(self):
+    def train(self):
         assert self.compiled
         self.loader.load()
 
@@ -107,11 +109,18 @@ class SentimentAnalyzer:
         }
 
     def save(self):
-        pass
+
+        filename_prefix = self.config.experiment_name
+
+        if isinstance(self.extractor, IBoWFeatureExtractor) or isinstance(self.extractor, IW2VFeatureExtractor): 
+            self.extractor.save(os.path.join(filename_prefix, "extractor"))
+        self.classifier.save(os.path.join(filename_prefix, "model"))
+        
+        
 
     def load(self):
         pass
 
-    def interactive_run(self, batch):
+    def run(self, batch):
         assert self.compiled
         assert self.trained
