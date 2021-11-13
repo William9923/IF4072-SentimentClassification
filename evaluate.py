@@ -1,29 +1,24 @@
 import numpy as np
-from os import pipe
 import pandas as pd 
 pd.options.mode.chained_assignment = None
 from src.utility.config import Config, Option
 from pipeline import SentimentAnalyzer
 
-if __name__ == "__main__":
-    evaluate_exp_name = "lgbm-testing"
-    evaluate_fe_option = "tfidf"
-    evaluate_clf_option = "lgbm"
-    config = Config(evaluate_exp_name)
-    option = Option(evaluate_fe_option, evaluate_clf_option)
-    pipeline = SentimentAnalyzer(config, option)
-    pipeline.build()
-    pipeline.load()
+evaluate_exp_name = "exp-p0-1.2"
+evaluate_fe_option = "tfidf"
+evaluate_clf_option = "nb"
+config = Config(evaluate_exp_name)
+option = Option(evaluate_fe_option, evaluate_clf_option)
+pipeline = SentimentAnalyzer(config, option)
 
-    samples = [
-        "I want to eat you",
-        "that movie was amazing, we would like to see it again",
-        "such an amazing performance",
-        "that were terrible movie right there"
-    ]
+pipeline.build()
+pipeline.load()
 
-    labels = [0, 1, 1, 0]
-    res, pred = pipeline.evaluate(pd.Series(np.array(samples)), labels)
+test = pd.read_csv("data/test.csv")
+samples = test.head(20)
+samples_text = samples['review']
+labels = samples['sentiment'].map({'negative': 0, 'positive': 1})
+res, pred = pipeline.evaluate(samples_text, labels)
 
-    for sample, label in zip(samples, pred):
-        print(f"{sample} | {label}")
+for sample, label in zip(samples_text, pred):
+    print(f"{sample} | {label}")

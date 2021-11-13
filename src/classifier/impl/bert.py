@@ -8,6 +8,7 @@ from tensorflow.keras.layers import (
 )
 from tensorflow.keras.models import model_from_json
 from tensorflow.keras.models import Model
+from tensorflow import saved_model
 from transformers import TFDistilBertModel
 
 from src.classifier.interface import IClassifier
@@ -72,21 +73,11 @@ class FineTuneBertClf(IClassifier):
         return np.round(self.predict_proba(batch))
 
     def save(self, filename):
-        formatted_filename_model = f"{filename}.hd5"
-        formatted_filename_weight = f"{filename}.h5"
-
         print(f"=== Saving Fine Tuned Bert Model : {filename} ===")
-        self.model.save_weights(formatted_filename_weight)
-        json_rpr = self.model.to_json()
-        with open(formatted_filename_model, 'w') as f:
-            f.write(json_rpr)
+        saved_model.save(self.model, export_dir=filename)
+
 
     def load(self, filename):
-        formatted_filename_model = f"{filename}.hd5"
-        formatted_filename_weight = f"{filename}.h5"
-
         print("=== Loading Fine Tuned Bert Model : {filename} === ")
-        with open(formatted_filename_model, 'r') as f:
-            self.model = model_from_json(f.read())
-        self.model.load_weights(formatted_filename_weight)
+        saved_model.load(filename)
         self.fitted = True
