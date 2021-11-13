@@ -33,6 +33,6 @@ class NaiveBayesClf(IClassifier):
         joblib.dump(self.model, f"{filename}.pkl")
 
     def load(self, filename):
-        print("=== Loading NB (Shallow ML) : {filename} === ")
+        print(f"=== Loading NB (Shallow ML) : {filename} === ")
         self.model = joblib.load(f"{filename}.pkl")
         self.fitted = True

@@ -38,6 +38,6 @@ class LGBMClf(IClassifier):
         joblib.dump(self.model, f"{filename}.pkl")
 
     def load(self, filename):
-        print("=== Loading LGBM (Shallow ML) : {filename} === ")
+        print(f"=== Loading LGBM (Shallow ML) : {filename} === ")
         self.model = joblib.load(f"{filename}.pkl")
         self.fitted = True

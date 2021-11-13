@@ -4,9 +4,9 @@ pd.options.mode.chained_assignment = None
 from src.utility.config import Config, Option
 from pipeline import SentimentAnalyzer
 
-evaluate_exp_name = "exp-p0-1.2"
-evaluate_fe_option = "tfidf"
-evaluate_clf_option = "nb"
+evaluate_exp_name = "exp-p1-2.2"
+evaluate_fe_option = "bert"
+evaluate_clf_option = "bert"
 config = Config(evaluate_exp_name)
 option = Option(evaluate_fe_option, evaluate_clf_option)
 pipeline = SentimentAnalyzer(config, option)

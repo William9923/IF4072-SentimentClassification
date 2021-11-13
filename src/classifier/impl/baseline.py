@@ -94,7 +94,7 @@ class LSTMClf(IClassifier):
         formatted_filename_model = f"{filename}.hd5"
         formatted_filename_weight = f"{filename}.h5"
 
-        print("=== Loading Baseline (LSTM) Model : {filename} === ")
+        print(f"=== Loading Baseline (LSTM) Model : {filename} === ")
         with open(formatted_filename_model, 'r') as f:
             self.model = model_from_json(f.read())
         self.model.load_weights(formatted_filename_weight)

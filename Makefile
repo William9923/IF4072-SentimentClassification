@@ -6,3 +6,6 @@ format:
 
 complexity:
 	radon cc src main.py -a
+
+exp:
+	sh ./run-exp.sh

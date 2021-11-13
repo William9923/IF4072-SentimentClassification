@@ -78,6 +78,6 @@ class FineTuneBertClf(IClassifier):
 
 
     def load(self, filename):
-        print("=== Loading Fine Tuned Bert Model : {filename} === ")
+        print(f"=== Loading Fine Tuned Bert Model : {filename} === ")
         saved_model.load(filename)
         self.fitted = True
