@@ -100,7 +100,8 @@ class Option:
             COUNT_FE_OPTION,
             TFIDF_FE_OPTION,
             FASTTEXT_FE_OPTION,
-            BERT_CLF_OPTION,
+            BERT_FE_OPTION,
+            ROBERTA_FE_OPTION
         ]:
             raise Exception("Feature Extractor Option not exist!")
 
