@@ -4,6 +4,7 @@ import pandas as pd
 from src.classifier.impl.baseline import LSTMClf
 
 pd.options.mode.chained_assignment = None
+from gensim.utils import simple_preprocess
 
 from src.classifier.interface import IClassifier
 from src.loader.interface import ILoader
@@ -77,6 +78,11 @@ class SentimentAnalyzer:
         X_val, y_val = self.loader.get_val_data()
         X_test, y_test = self.loader.get_test_data()
 
+        # X_train['cleaned_review'] = X_train['review'].apply(simple_preprocess)
+        # print(X_val['review'])
+        # X_val['cleaned_review'] = X_val['review'].apply(simple_preprocess)
+        # X_test['cleaned_review'] = X_test['review'].apply(simple_preprocess)
+
         X_train["cleaned_review"] = self.preprocessor.preprocess(X_train["review"])
         X_val["cleaned_review"] = self.preprocessor.preprocess(X_val["review"])
         X_test["cleaned_review"] = self.preprocessor.preprocess(X_test["review"])
@@ -111,9 +117,9 @@ class SentimentAnalyzer:
         self.trained = True
         pred = self.classifier.predict(test_tokenized)
         self.result = {
-            "precision": precision_score(y_test, pred),
-            "recall": recall_score(y_test, pred),
-            "f1": f1_score(y_test, pred),
+            "precision": precision_score(y_test, pred, average='micro'),
+            "recall": recall_score(y_test, pred,average='micro'),
+            "f1": f1_score(y_test, pred, average='micro'),
             "accuracy": accuracy_score(y_test, pred),
         }
         return self.result

@@ -15,17 +15,24 @@ class DataLoader(ILoader):
         self.test_file_path = test_file_path
         self.val_size = val_split
         self.sampling = sampling
-        self.encoder = LabelEncoder()
+        self.encoder = {
+            "neutral" : 0,
+            "positive": 1,
+            "negative": 2,
+        }
+        self.reverse_encoder = {}
+        for key, val in self.encoder.items():
+            self.reverse_encoder[val] = key
 
     def load(self):
         train = pd.read_csv(self.train_file_path)
         test = pd.read_csv(self.test_file_path)
 
         assert len(train) >= self.sample_size
-
-        self.encoder.fit(list(train[self.target].values))
-        train[self.target] = self.encoder.transform(list(train[self.target].values))
-        test[self.target] = self.encoder.transform(list(test[self.target].values))
+        train = train.dropna(subset=['review'])
+        train[self.target] = train[self.target].astype(str).map(self.encoder)
+        test = test.dropna(subset=['review'])
+        test[self.target] = test[self.target].astype(str).map(self.encoder)
 
         X = train.drop([self.target], axis = 1)
         y = train[self.target]
@@ -64,8 +71,9 @@ class DataLoader(ILoader):
 
     def reverse_labels(self, batch):
         assert self.encoder is not None
-        func = lambda x: int(x)
-        return self.encoder.inverse_transform([func(x) for x in batch])
+        reversed_batch = batch.map(self.reverse_encoder)
+        return reversed_batch
+
 
 
     

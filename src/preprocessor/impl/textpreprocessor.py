@@ -11,6 +11,7 @@ from src.utility.constant import (
     EMOJI_MASK,
 )
 from src.preprocessor.interface import IPreprocessor
+from gensim.utils import simple_preprocess
 
 class TextPreprocessor(IPreprocessor):
     def __init__(self, component):
@@ -30,13 +31,13 @@ class TextPreprocessor(IPreprocessor):
         if NORMALIZATION_COMPONENT in self.component:
             batch = batch.apply(lambda row: self.__normalization(row))
 
-        if REMOVE_PUNCT_COMPONENT in self.component:
-            batch = batch.apply(lambda row: self.__remove_punctuation(row))
+        # if REMOVE_PUNCT_COMPONENT in self.component:
+        #     batch = batch.apply(lambda row: self.__remove_punctuation(row))
 
-        if LOWERCASE_COMPONENT in self.component:
-            batch = batch.apply(lambda row: self.__lower(row))
+        # if LOWERCASE_COMPONENT in self.component:
+        #     batch = batch.apply(lambda row: self.__lower(row))
         
-        batch = batch.apply(lambda row: self.__remove_excess_whitespace(row))
+        batch = batch.apply(lambda row: " ".join(simple_preprocess(row)))
         return batch
 
     def available_component(self):
