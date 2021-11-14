@@ -2,7 +2,7 @@ from tensorflow.keras.losses import BinaryCrossentropy, SparseCategoricalCrossen
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.metrics import SparseCategoricalAccuracy
 from src.utility.config import Config
-from src.classifier import IClassifier, FineTuneBertClf, LSTMClf, LGBMClf, NaiveBayesClf
+from src.classifier import IClassifier, FineTuneBertClf, FineTuneRobertaClf, LSTMClf, LGBMClf, NaiveBayesClf
 
 # --- [Global Variable] ---
 lstmClf: IClassifier = None
@@ -94,3 +94,8 @@ def build_roberta(config: Config) -> IClassifier:
         "optimizer": Adam(learning_rate=config.learning_rate_dl),
         "metrics": [SparseCategoricalAccuracy()],
     } 
+
+    clf = FineTuneRobertaClf(**params)
+    robertaClf = clf
+
+    return clf

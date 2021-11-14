@@ -4,4 +4,5 @@ from src.feature_extractor.impl import (
     CountFeatureExtractor,
     FastTextFeatureExtractor,
     BERTFeatureExtractor,
+    RobertaFeatureExtractor,
 )

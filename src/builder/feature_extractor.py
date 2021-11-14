@@ -6,6 +6,7 @@ from src.feature_extractor import (
     CountFeatureExtractor,
     FastTextFeatureExtractor,
     BERTFeatureExtractor,
+    RobertaFeatureExtractor,
 )
 
 # --- [Global Variable] ---
@@ -13,6 +14,7 @@ tfidfFE: IBoWFeatureExtractor = None
 countFE: IBoWFeatureExtractor = None
 fasttextFE: IW2VFeatureExtractor = None
 bertFE: IW2VFeatureExtractor = None
+robertaFE: IW2VFeatureExtractor = None
 
 
 def build_tfidf_fe(config: Config) -> IBoWFeatureExtractor:
@@ -78,15 +80,15 @@ def build_bert_fe(config: Config) -> IW2VFeatureExtractor:
     return fe
 
 def build_roberta_fe(config: Config) -> IW2VFeatureExtractor:
-    global bertFE
-    if bertFE is not None:
-        return bertFE
+    global robertaFE
+    if robertaFE is not None:
+        return robertaFE
 
     params = {
         "pre_trained_name": config.pretrained_model_name,
         "max_length": config.max_length
     }
-    fe = BERTFeatureExtractor(**params)
-    bertFE = fe
+    fe = RobertaFeatureExtractor(**params)
+    robertaFE = fe
 
     return fe

@@ -14,10 +14,12 @@ from src.utility.constant import (
     TFIDF_FE_OPTION,
     FASTTEXT_FE_OPTION,
     BERT_FE_OPTION,
+    ROBERTA_FE_OPTION,
     LGBM_CLF_OPTION,
     LSTM_CLF_OPTION,
     BERT_CLF_OPTION,
     NB_CLF_OPTION,
+    ROBERTA_CLF_OPTION,
     CONFIG_CLS,
     OPTION_CLS,
 )
@@ -107,6 +109,7 @@ class Option:
             LGBM_CLF_OPTION,
             LSTM_CLF_OPTION,
             BERT_CLF_OPTION,
+            ROBERTA_CLF_OPTION,
         ]:
             raise Exception("Classifier Option not exist!")
 
@@ -125,6 +128,9 @@ class Option:
             supported = True
 
         if self.fe_option in [BERT_FE_OPTION] and self.clf_option == BERT_CLF_OPTION:
+            supported = True
+
+        if self.fe_option in [ROBERTA_FE_OPTION] and self.clf_option == ROBERTA_CLF_OPTION:
             supported = True
 
         if not supported:

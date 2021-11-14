@@ -118,8 +118,8 @@ python main.py --name exp-p1-2.2 \
 
 echo "📝 Running exp P1 3 : RoBERTa"
 python main.py --name exp-p1-2.1 \
-  --fe bert \
-  --clf bert \
+  --fe roberta \
+  --clf roberta \
   --no-sampling \
   --sample_size 100 \
   --target sentiment \

@@ -15,10 +15,12 @@ from src.utility.constant import (
     TFIDF_FE_OPTION,
     FASTTEXT_FE_OPTION,
     BERT_FE_OPTION,
+    ROBERTA_FE_OPTION,
     LGBM_CLF_OPTION,
     LSTM_CLF_OPTION,
     BERT_CLF_OPTION,
     NB_CLF_OPTION,
+    ROBERTA_CLF_OPTION,
 )
 
 from src.utility.config import Option, Config
@@ -34,6 +36,8 @@ from src.builder import (
     build_tfidf_fe,
     build_text_prep,
     build_data_loader,
+    build_roberta,
+    build_roberta_fe,
 )
 
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
@@ -52,6 +56,7 @@ class SentimentAnalyzer:
             TFIDF_FE_OPTION: build_tfidf_fe,
             FASTTEXT_FE_OPTION: build_fasttext_fe,
             BERT_FE_OPTION: build_bert_fe,
+            ROBERTA_FE_OPTION: build_roberta_fe,
         }
 
         self.clf_map = {
@@ -59,6 +64,7 @@ class SentimentAnalyzer:
             LGBM_CLF_OPTION: build_lgbm,
             LSTM_CLF_OPTION: build_lstm,
             BERT_CLF_OPTION: build_bert,
+            ROBERTA_CLF_OPTION: build_roberta,
         }
         self.compiled = False
         self.trained = False
@@ -117,9 +123,9 @@ class SentimentAnalyzer:
         self.trained = True
         pred = self.classifier.predict(test_tokenized)
         self.result = {
-            "precision": precision_score(y_test, pred, average='micro'),
-            "recall": recall_score(y_test, pred,average='micro'),
-            "f1": f1_score(y_test, pred, average='micro'),
+            "precision": precision_score(y_test, pred, average="micro"),
+            "recall": recall_score(y_test, pred, average="micro"),
+            "f1": f1_score(y_test, pred, average="micro"),
             "accuracy": accuracy_score(y_test, pred),
         }
         return self.result
@@ -164,9 +170,9 @@ class SentimentAnalyzer:
 
         pred = self.classifier.predict(prep_tokenized)
         result = {
-            "precision": precision_score(labels, pred, average='micro'),
-            "recall": recall_score(labels, pred,average='micro'),
-            "f1": f1_score(labels, pred, average='micro'),
+            "precision": precision_score(labels, pred, average="micro"),
+            "recall": recall_score(labels, pred, average="micro"),
+            "f1": f1_score(labels, pred, average="micro"),
             "accuracy": accuracy_score(labels, pred),
         }
 
