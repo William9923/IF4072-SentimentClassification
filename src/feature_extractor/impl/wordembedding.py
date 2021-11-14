@@ -80,7 +80,10 @@ class BERTFeatureExtractor(IW2VFeatureExtractor):
             return_tensors="tf",
         )
         if mask_attention:
-            x.data
+            return {
+                "input_ids": x["input_ids"],
+                "attention_mask": x["attention_mask"],
+            }
         return x["input_ids"]
 
     def get_embedding_matrix(self):
@@ -113,7 +116,10 @@ class RobertaFeatureExtractor(IW2VFeatureExtractor):
             return_tensors="tf",
         )
         if mask_attention:
-            x.data
+            return {
+                "input_ids": x["input_ids"],
+                "attention_mask": x["attention_mask"],
+            }
         return x["input_ids"]
 
     def get_embedding_matrix(self):

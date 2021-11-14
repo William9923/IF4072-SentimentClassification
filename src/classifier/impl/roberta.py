@@ -4,10 +4,10 @@ from tensorflow.keras.layers import (
     Input,
     Dropout,
     Dense,
+    Flatten
 )
 from tensorflow.keras.models import Model
 from tensorflow.keras.models import load_model
-from tensorflow.python.keras.layers.core import Flatten
 from transformers import TFRobertaModel
 
 from src.classifier.interface import IClassifier
