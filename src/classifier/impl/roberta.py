@@ -38,7 +38,7 @@ class FineTuneRobertaClf(IClassifier):
             "attention_mask": self.attention_mask,
         }
 
-        self.embedding = self.bert(inputs)[0]
+        self.embedding = self.bert.bert(inputs)[0]
         self.flatten = Flatten()(self.embedding)
         self.drop = Dropout(0.3)(self.flatten)
         self.out = Dense(3, activation="softmax")(self.drop)

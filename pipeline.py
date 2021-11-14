@@ -106,7 +106,7 @@ class SentimentAnalyzer:
                     self.extractor.get_embedding_matrix()
                 )
 
-            get_attention_mask = self.option.clf_option == BERT_CLF_OPTION
+            get_attention_mask = self.option.clf_option in [BERT_CLF_OPTION, ROBERTA_CLF_OPTION]
             train_tokenized = self.extractor.tokenize(
                 X_train["cleaned_review"], get_attention_mask
             )
