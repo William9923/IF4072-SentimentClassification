@@ -8,7 +8,7 @@ from tensorflow.keras.layers import (
 from tensorflow.keras.models import Model
 from tensorflow import saved_model
 from tensorflow.python.keras.layers.core import Flatten
-from transformers import RobertaModel
+from transformers import TFRobertaModel
 
 from src.classifier.interface import IClassifier
 
@@ -26,7 +26,7 @@ class FineTuneRobertaClf(IClassifier):
     ):
 
         self.batch_size = batch_size
-        self.bert = RobertaModel.from_pretrained(model_name)
+        self.bert = TFRobertaModel.from_pretrained(model_name)
 
         self.input_ids = Input(shape=(length,), name="input_ids", dtype="int32")
         self.attention_mask = Input(

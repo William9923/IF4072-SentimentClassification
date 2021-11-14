@@ -117,7 +117,7 @@ python main.py --name exp-p1-2.2 \
   --max_length 30
 
 echo "📝 Running exp P1 3 : RoBERTa"
-python main.py --name exp-p1-2.1 \
+python main.py --name exp-p1-3 \
   --fe roberta \
   --clf roberta \
   --no-sampling \
