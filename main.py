@@ -66,10 +66,15 @@ if __name__ == "__main__":
     # parser.add_argument("--num_words", default=1000, type=int)
     # parser.add_argument("--sg", default=1, type=int)
 
+    parser.add_argument(
+        "--max_length", type=str, default=30, help=f"To describe the max length for pre-trained tokenizer!"
+    )
+
     # Training Settings
     parser.add_argument("--n_estimators", default=500, type=int)
     parser.add_argument("--early_stopping_round", default=15, type=int)
     parser.add_argument("--max_depth", default=24, type=int)
+
 
     parser.add_argument("--learning_rate", default=3e-4, type=float)
     parser.add_argument("--epochs", default=10, type=int)
@@ -103,6 +108,7 @@ if __name__ == "__main__":
     # config.window = args.window
     # config.num_words = args.num_words
     # config.sg = args.sg
+    config.max_length = args.max_length
 
     config.n_estimators = args.n_estimators
     config.early_stopping_round = args.early_stopping_round

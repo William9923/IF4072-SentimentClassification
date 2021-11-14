@@ -61,7 +61,7 @@ class LSTMClf(IClassifier):
         )
 
     def train(self, X, y, X_test, y_test):
-        self.model.fit(
+        self.history = self.model.fit(
             x=X,
             y=y,
             batch_size=self.batch_size,

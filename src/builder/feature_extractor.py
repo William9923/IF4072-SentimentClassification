@@ -69,7 +69,22 @@ def build_bert_fe(config: Config) -> IW2VFeatureExtractor:
         return bertFE
 
     params = {
-        "pre_trained_name": config.pretrained_model_name
+        "pre_trained_name": config.pretrained_model_name,
+        "max_length": config.max_length
+    }
+    fe = BERTFeatureExtractor(**params)
+    bertFE = fe
+
+    return fe
+
+def build_roberta_fe(config: Config) -> IW2VFeatureExtractor:
+    global bertFE
+    if bertFE is not None:
+        return bertFE
+
+    params = {
+        "pre_trained_name": config.pretrained_model_name,
+        "max_length": config.max_length
     }
     fe = BERTFeatureExtractor(**params)
     bertFE = fe

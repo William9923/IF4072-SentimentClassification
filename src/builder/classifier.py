@@ -9,6 +9,7 @@ lstmClf: IClassifier = None
 nbClf: IClassifier = None
 lgbmClf: IClassifier = None
 bertClf: IClassifier = None
+robertaClf: IClassifier = None 
 
 
 def build_lstm(config: Config) -> IClassifier:
@@ -67,7 +68,7 @@ def build_bert(config: Config) -> IClassifier:
 
     params = {
         "batch_size": config.batch_size,
-        "length": config.pretrained_embedding_dimension,
+        "length": config.max_length,
         "epochs": config.epochs,
         "model_name": config.pretrained_model_name,
         "loss": SparseCategoricalCrossentropy(),
@@ -78,3 +79,18 @@ def build_bert(config: Config) -> IClassifier:
     bertClf = clf
 
     return clf
+
+def build_roberta(config: Config) -> IClassifier:
+    global robertaClf 
+    if robertaClf is not None:
+        return robertaClf 
+
+    params = {
+        "batch_size": config.batch_size,
+        "length": config.max_length,
+        "epochs": config.epochs,
+        "model_name": config.pretrained_model_name,
+        "loss": SparseCategoricalCrossentropy(),
+        "optimizer": Adam(learning_rate=config.learning_rate_dl),
+        "metrics": [SparseCategoricalAccuracy()],
+    } 

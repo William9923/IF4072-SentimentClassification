@@ -59,6 +59,7 @@ class Config(object):
         self.num_words = 1000
 
         self.pretrained_embedding_dimension = PRETRAINED_BERT_EMBEDDING_DIM
+        self.max_length = 30
         # ----- [End Param] -----
 
         # ----- [Initializing Shallow ML Clf] -----

@@ -4,17 +4,16 @@ from tensorflow.keras.layers import (
     Input,
     Dropout,
     Dense,
-    LSTM,
 )
-from tensorflow.keras.models import model_from_json
 from tensorflow.keras.models import Model
 from tensorflow import saved_model
-from transformers import TFDistilBertModel
+from tensorflow.python.keras.layers.core import Flatten
+from transformers import RobertaModel
 
 from src.classifier.interface import IClassifier
 
 
-class FineTuneBertClf(IClassifier):
+class FineTuneRobertaClf(IClassifier):
     def __init__(
         self,
         batch_size,
@@ -27,7 +26,7 @@ class FineTuneBertClf(IClassifier):
     ):
 
         self.batch_size = batch_size
-        self.bert = TFDistilBertModel.from_pretrained(model_name)
+        self.bert = RobertaModel.from_pretrained(model_name)
 
         self.input_ids = Input(shape=(length,), name="input_ids", dtype="int32")
         self.attention_mask = Input(
@@ -40,11 +39,9 @@ class FineTuneBertClf(IClassifier):
         }
 
         self.embedding = self.bert(inputs)[0]
-        self.lstm = LSTM(128)(self.embedding)
-        # self.fcn1 = Dense(length, activation="relu")(self.embedding[:, 0, :])
-        self.fcn1 = Dense(64, activation="relu")(self.lstm)
-        self.fcn2 = Dropout(0.5)(self.fcn1)
-        self.out =  Dense(3, activation="softmax")(self.fcn2)
+        self.flatten = Flatten()(self.embedding)
+        self.drop = Dropout(0.3)(self.flatten)
+        self.out = Dense(3, activation="softmax")(self.drop)
 
         self.model = Model(inputs=inputs, outputs=self.out)
 
@@ -75,7 +72,6 @@ class FineTuneBertClf(IClassifier):
     def save(self, filename):
         print(f"=== Saving Fine Tuned Bert Model : {filename} ===")
         saved_model.save(self.model, export_dir=filename)
-
 
     def load(self, filename):
         print(f"=== Loading Fine Tuned Bert Model : {filename} === ")

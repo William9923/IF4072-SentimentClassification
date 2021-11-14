@@ -71,7 +71,9 @@ class DataLoader(ILoader):
 
     def reverse_labels(self, batch):
         assert self.encoder is not None
-        reversed_batch = batch.map(self.reverse_encoder)
+        reversed_batch = []
+        for item in batch: 
+            reversed_batch.append(self.reverse_encoder.get(item))
         return reversed_batch
 
 
