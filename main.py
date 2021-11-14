@@ -67,7 +67,7 @@ if __name__ == "__main__":
     # parser.add_argument("--sg", default=1, type=int)
 
     parser.add_argument(
-        "--max_length", type=str, default=30, help=f"To describe the max length for pre-trained tokenizer!"
+        "--max_length", type=int, default=30, help=f"To describe the max length for pre-trained tokenizer!"
     )
 
     # Training Settings
