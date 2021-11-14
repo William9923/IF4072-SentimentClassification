@@ -109,7 +109,7 @@ class RobertaFeatureExtractor(IW2VFeatureExtractor):
 
     def tokenize(self, X, mask_attention=False):
         x = self.tokenizer(
-            list(X),
+            X.tolist(),
             max_length=self.max_length,
             padding="max_length",
             truncation=True,

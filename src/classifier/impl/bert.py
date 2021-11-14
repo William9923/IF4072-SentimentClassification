@@ -39,7 +39,7 @@ class FineTuneBertClf(IClassifier):
             "attention_mask": self.attention_mask,
         }
 
-        self.embedding = self.bert(inputs)[0]
+        self.embedding = self.bert.transformer(inputs)[0]
         self.lstm = LSTM(128)(self.embedding)
         # self.fcn1 = Dense(length, activation="relu")(self.embedding[:, 0, :])
         self.fcn1 = Dense(64, activation="relu")(self.lstm)
