@@ -44,7 +44,7 @@ class FineTuneBertClf(IClassifier):
         # self.fcn1 = Dense(length, activation="relu")(self.embedding[:, 0, :])
         self.fcn1 = Dense(64, activation="relu")(self.lstm)
         self.fcn2 = Dropout(0.5)(self.fcn1)
-        self.out = Dense(1, activation="sigmoid")(self.fcn2)
+        self.out =  Dense(3, activation="softmax")(self.fcn2)
 
         self.model = Model(inputs=inputs, outputs=self.out)
 
@@ -70,7 +70,7 @@ class FineTuneBertClf(IClassifier):
         return self.model.predict(x=batch, batch_size=self.batch_size)
 
     def predict(self, batch):
-        return np.round(self.predict_proba(batch))
+        return np.argmax(self.predict_proba(batch), axis=-1)
 
     def save(self, filename):
         print(f"=== Saving Fine Tuned Bert Model : {filename} ===")

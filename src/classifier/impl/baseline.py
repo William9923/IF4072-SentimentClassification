@@ -37,7 +37,7 @@ class LSTMClf(IClassifier):
             )(self.input)
         self.lstm1 = LSTM(128)(self.embedding)
         self.dropout = Dropout(0.2)(self.lstm1)
-        self.output = Dense(1, activation="sigmoid")(self.dropout)
+        self.output = Dense(3, activation="softmax")(self.dropout)
         self.model = Model(inputs=self.input, outputs=self.output)
 
         self.fitted = False
@@ -78,7 +78,7 @@ class LSTMClf(IClassifier):
         return self.model.predict(x=batch, batch_size=self.batch_size)
 
     def predict(self, batch):
-        return np.round(self.predict_proba(batch))
+        return np.argmax(self.predict_proba(batch), axis=-1)
 
     def save(self, filename):
         formatted_filename_model = f"{filename}.hd5"

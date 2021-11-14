@@ -163,11 +163,10 @@ class SentimentAnalyzer:
             prep_tokenized = self.extractor.tokenize(prep_batch, get_attention_mask)
 
         pred = self.classifier.predict(prep_tokenized)
-
         result = {
-            "precision": precision_score(labels, pred),
-            "recall": recall_score(labels, pred),
-            "f1": f1_score(labels, pred),
+            "precision": precision_score(labels, pred, average='micro'),
+            "recall": recall_score(labels, pred,average='micro'),
+            "f1": f1_score(labels, pred, average='micro'),
             "accuracy": accuracy_score(labels, pred),
         }
 

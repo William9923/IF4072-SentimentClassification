@@ -1,5 +1,6 @@
-from tensorflow.keras.losses import BinaryCrossentropy
+from tensorflow.keras.losses import BinaryCrossentropy, SparseCategoricalCrossentropy
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.metrics import SparseCategoricalAccuracy
 from src.utility.config import Config
 from src.classifier import IClassifier, FineTuneBertClf, LSTMClf, LGBMClf, NaiveBayesClf
 
@@ -21,9 +22,9 @@ def build_lstm(config: Config) -> IClassifier:
         "epochs": config.epochs,
         "embedding_matrix": config.embedding_matrix,
         "embedding_matrix_shape": (config.max_vocab_size, config.embedding_dimension),
-        "loss": BinaryCrossentropy(),
+        "loss": SparseCategoricalCrossentropy(),
         "optimizer": Adam(learning_rate=config.learning_rate_dl),
-        "metrics": config.metrics,
+        "metrics": [SparseCategoricalAccuracy()],
     }
     clf = LSTMClf(**params)
     lstmClf = clf
@@ -69,9 +70,9 @@ def build_bert(config: Config) -> IClassifier:
         "length": config.pretrained_embedding_dimension,
         "epochs": config.epochs,
         "model_name": config.pretrained_model_name,
-        "loss": BinaryCrossentropy(),
+        "loss": SparseCategoricalCrossentropy(),
         "optimizer": Adam(learning_rate=config.learning_rate_dl),
-        "metrics": config.metrics,
+        "metrics": [SparseCategoricalAccuracy()],
     }
     clf = FineTuneBertClf(**params)
     bertClf = clf

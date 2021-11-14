@@ -30,12 +30,6 @@ class TextPreprocessor(IPreprocessor):
 
         if NORMALIZATION_COMPONENT in self.component:
             batch = batch.apply(lambda row: self.__normalization(row))
-
-        # if REMOVE_PUNCT_COMPONENT in self.component:
-        #     batch = batch.apply(lambda row: self.__remove_punctuation(row))
-
-        # if LOWERCASE_COMPONENT in self.component:
-        #     batch = batch.apply(lambda row: self.__lower(row))
         
         batch = batch.apply(lambda row: " ".join(simple_preprocess(row)))
         return batch
