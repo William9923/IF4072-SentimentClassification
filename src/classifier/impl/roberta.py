@@ -6,7 +6,7 @@ from tensorflow.keras.layers import (
     Dense,
 )
 from tensorflow.keras.models import Model
-from tensorflow import saved_model
+from tensorflow.keras.models import load_model
 from tensorflow.python.keras.layers.core import Flatten
 from transformers import TFRobertaModel
 
@@ -70,10 +70,10 @@ class FineTuneRobertaClf(IClassifier):
         return np.argmax(self.predict_proba(batch), axis=-1)
 
     def save(self, filename):
-        print(f"=== Saving Fine Tuned Bert Model : {filename} ===")
-        saved_model.save(self.model, export_dir=filename)
+        print(f"=== Saving Fine Tuned RoBerta Model : {filename} ===")
+        self.model.save(filename)
 
     def load(self, filename):
-        print(f"=== Loading Fine Tuned Bert Model : {filename} === ")
-        self.model = saved_model.load(filename)
+        print(f"=== Loading Fine Tuned RoBerta Model : {filename} === ")
+        self.model = load_model(filename)
         self.fitted = True

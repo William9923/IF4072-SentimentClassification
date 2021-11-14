@@ -8,7 +8,7 @@ from tensorflow.keras.layers import (
 )
 from tensorflow.keras.models import model_from_json
 from tensorflow.keras.models import Model
-from tensorflow import saved_model
+from tensorflow.keras.models import load_model
 from transformers import TFDistilBertModel
 
 from src.classifier.interface import IClassifier
@@ -74,10 +74,10 @@ class FineTuneBertClf(IClassifier):
 
     def save(self, filename):
         print(f"=== Saving Fine Tuned Bert Model : {filename} ===")
-        saved_model.save(self.model, export_dir=filename)
+        self.model.save(filename)
 
 
     def load(self, filename):
         print(f"=== Loading Fine Tuned Bert Model : {filename} === ")
-        self.model = saved_model.load(filename)
+        self.model = load_model(filename)
         self.fitted = True
